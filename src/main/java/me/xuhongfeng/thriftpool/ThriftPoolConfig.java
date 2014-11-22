@@ -23,25 +23,18 @@ public class ThriftPoolConfig<CLIENT extends TServiceClient> extends GenericObje
     public ThriftPoolConfig(TServiceClientFactory<CLIENT> clientFactory, TTransportFactory transportFactory) {
         this.clientFactory = clientFactory;
         this.transportFactory = transportFactory;
-    }
 
-    public static <CLIENT extends TServiceClient>
-        ThriftPoolConfig<CLIENT> defaultConfig(Class<CLIENT> clazz,
-                                               TServiceClientFactory<CLIENT> clientFactory,
-                                               TTransportFactory transportFactory) {
-        ThriftPoolConfig<CLIENT>  config = new ThriftPoolConfig<CLIENT>(clientFactory, transportFactory);
+        setMaxTotal(200);
+        setMaxIdle(50);
+        setMinIdle(5);
 
-        config.setMaxTotal(200);
-        config.setMaxIdle(50);
-        config.setMinIdle(5);
+        setMaxWaitMillis(30000L);
 
-        config.setMaxWaitMillis(30000L);
+        setTestOnCreate(true);
 
-        config.setTimeBetweenEvictionRunsMillis(60000L);
-        config.setNumTestsPerEvictionRun(-10);
-        config.setTestWhileIdle(true);
-
-        return config;
+        setTimeBetweenEvictionRunsMillis(60000L);
+        setNumTestsPerEvictionRun(-10);
+        setTestWhileIdle(true);
     }
 
     public TServiceClientFactory<CLIENT> getClientFactory() {

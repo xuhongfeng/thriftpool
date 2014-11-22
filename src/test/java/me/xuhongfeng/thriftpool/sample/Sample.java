@@ -31,25 +31,27 @@ public class Sample {
         };
 
         ThriftPoolConfig<SampleThrift.Client> config =
-                ThriftPoolConfig.defaultConfig(SampleThrift.Client.class, clientFactory, transportFactory);
+                new ThriftPoolConfig<SampleThrift.Client>(clientFactory, transportFactory);
 
         ThriftPool<SampleThrift.Client> pool = new ThriftPool<SampleThrift.Client>(config);
 
-        final int a = 1;
-        ThriftCaller<SampleThrift.Client, Integer> caller = new ThriftCaller<SampleThrift.Client, Integer>() {
+        final int userId = 1;
+        final User user = new ThriftCaller<SampleThrift.Client, User>() {
             @Override
-            protected Integer innerCall(SampleThrift.Client client) throws Exception {
-                return client.incr(a);
+            protected User innerCall(SampleThrift.Client client) throws Exception {
+                try {
+                    return client.get(userId);
+                } catch (UserNotFoundException e) {
+                    return null;
+                }
             }
-        };
-        final int b = caller.call(pool);
+        }.call(pool);
 
-        ThriftRunner<SampleThrift.Client> runner = new ThriftRunner<SampleThrift.Client>() {
+        new ThriftRunner<SampleThrift.Client>() {
             @Override
             protected void innerRun(SampleThrift.Client client) throws Exception {
-                client.save(b);
+                client.save(user);
             }
-        };
-        runner.run(pool);
+        }.run(pool);
     }
 }

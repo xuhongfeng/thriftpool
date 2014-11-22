@@ -34,9 +34,9 @@ public class SampleThrift {
 
   public interface Iface {
 
-    public int incr(int value) throws org.apache.thrift.TException;
+    public User get(int id) throws UserNotFoundException, org.apache.thrift.TException;
 
-    public void save(int value) throws org.apache.thrift.TException;
+    public void save(User user) throws org.apache.thrift.TException;
 
     public String ping() throws org.apache.thrift.TException;
 
@@ -44,9 +44,9 @@ public class SampleThrift {
 
   public interface AsyncIface {
 
-    public void incr(int value, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.incr_call> resultHandler) throws org.apache.thrift.TException;
+    public void get(int id, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.get_call> resultHandler) throws org.apache.thrift.TException;
 
-    public void save(int value, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.save_call> resultHandler) throws org.apache.thrift.TException;
+    public void save(User user, org.apache.thrift.async.AsyncMethodCallback<AsyncClient.save_call> resultHandler) throws org.apache.thrift.TException;
 
     public void ping(org.apache.thrift.async.AsyncMethodCallback<AsyncClient.ping_call> resultHandler) throws org.apache.thrift.TException;
 
@@ -72,39 +72,42 @@ public class SampleThrift {
       super(iprot, oprot);
     }
 
-    public int incr(int value) throws org.apache.thrift.TException
+    public User get(int id) throws UserNotFoundException, org.apache.thrift.TException
     {
-      send_incr(value);
-      return recv_incr();
+      send_get(id);
+      return recv_get();
     }
 
-    public void send_incr(int value) throws org.apache.thrift.TException
+    public void send_get(int id) throws org.apache.thrift.TException
     {
-      incr_args args = new incr_args();
-      args.setValue(value);
-      sendBase("incr", args);
+      get_args args = new get_args();
+      args.setId(id);
+      sendBase("get", args);
     }
 
-    public int recv_incr() throws org.apache.thrift.TException
+    public User recv_get() throws UserNotFoundException, org.apache.thrift.TException
     {
-      incr_result result = new incr_result();
-      receiveBase(result, "incr");
+      get_result result = new get_result();
+      receiveBase(result, "get");
       if (result.isSetSuccess()) {
         return result.success;
       }
-      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "incr failed: unknown result");
+      if (result.e != null) {
+        throw result.e;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "get failed: unknown result");
     }
 
-    public void save(int value) throws org.apache.thrift.TException
+    public void save(User user) throws org.apache.thrift.TException
     {
-      send_save(value);
+      send_save(user);
       recv_save();
     }
 
-    public void send_save(int value) throws org.apache.thrift.TException
+    public void send_save(User user) throws org.apache.thrift.TException
     {
       save_args args = new save_args();
-      args.setValue(value);
+      args.setUser(user);
       sendBase("save", args);
     }
 
@@ -155,56 +158,56 @@ public class SampleThrift {
       super(protocolFactory, clientManager, transport);
     }
 
-    public void incr(int value, org.apache.thrift.async.AsyncMethodCallback<incr_call> resultHandler) throws org.apache.thrift.TException {
+    public void get(int id, org.apache.thrift.async.AsyncMethodCallback<get_call> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      incr_call method_call = new incr_call(value, resultHandler, this, ___protocolFactory, ___transport);
+      get_call method_call = new get_call(id, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
-    public static class incr_call extends org.apache.thrift.async.TAsyncMethodCall {
-      private int value;
-      public incr_call(int value, org.apache.thrift.async.AsyncMethodCallback<incr_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+    public static class get_call extends org.apache.thrift.async.TAsyncMethodCall {
+      private int id;
+      public get_call(int id, org.apache.thrift.async.AsyncMethodCallback<get_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.value = value;
+        this.id = id;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
-        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("incr", org.apache.thrift.protocol.TMessageType.CALL, 0));
-        incr_args args = new incr_args();
-        args.setValue(value);
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("get", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        get_args args = new get_args();
+        args.setId(id);
         args.write(prot);
         prot.writeMessageEnd();
       }
 
-      public int getResult() throws org.apache.thrift.TException {
+      public User getResult() throws UserNotFoundException, org.apache.thrift.TException {
         if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
           throw new IllegalStateException("Method call not finished!");
         }
         org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
         org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
-        return (new Client(prot)).recv_incr();
+        return (new Client(prot)).recv_get();
       }
     }
 
-    public void save(int value, org.apache.thrift.async.AsyncMethodCallback<save_call> resultHandler) throws org.apache.thrift.TException {
+    public void save(User user, org.apache.thrift.async.AsyncMethodCallback<save_call> resultHandler) throws org.apache.thrift.TException {
       checkReady();
-      save_call method_call = new save_call(value, resultHandler, this, ___protocolFactory, ___transport);
+      save_call method_call = new save_call(user, resultHandler, this, ___protocolFactory, ___transport);
       this.___currentMethod = method_call;
       ___manager.call(method_call);
     }
 
     public static class save_call extends org.apache.thrift.async.TAsyncMethodCall {
-      private int value;
-      public save_call(int value, org.apache.thrift.async.AsyncMethodCallback<save_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+      private User user;
+      public save_call(User user, org.apache.thrift.async.AsyncMethodCallback<save_call> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
         super(client, protocolFactory, transport, resultHandler, false);
-        this.value = value;
+        this.user = user;
       }
 
       public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
         prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("save", org.apache.thrift.protocol.TMessageType.CALL, 0));
         save_args args = new save_args();
-        args.setValue(value);
+        args.setUser(user);
         args.write(prot);
         prot.writeMessageEnd();
       }
@@ -261,29 +264,32 @@ public class SampleThrift {
     }
 
     private static <I extends Iface> Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> getProcessMap(Map<String,  org.apache.thrift.ProcessFunction<I, ? extends  org.apache.thrift.TBase>> processMap) {
-      processMap.put("incr", new incr());
+      processMap.put("get", new get());
       processMap.put("save", new save());
       processMap.put("ping", new ping());
       return processMap;
     }
 
-    public static class incr<I extends Iface> extends org.apache.thrift.ProcessFunction<I, incr_args> {
-      public incr() {
-        super("incr");
+    public static class get<I extends Iface> extends org.apache.thrift.ProcessFunction<I, get_args> {
+      public get() {
+        super("get");
       }
 
-      public incr_args getEmptyArgsInstance() {
-        return new incr_args();
+      public get_args getEmptyArgsInstance() {
+        return new get_args();
       }
 
       protected boolean isOneway() {
         return false;
       }
 
-      public incr_result getResult(I iface, incr_args args) throws org.apache.thrift.TException {
-        incr_result result = new incr_result();
-        result.success = iface.incr(args.value);
-        result.setSuccessIsSet(true);
+      public get_result getResult(I iface, get_args args) throws org.apache.thrift.TException {
+        get_result result = new get_result();
+        try {
+          result.success = iface.get(args.id);
+        } catch (UserNotFoundException e) {
+          result.e = e;
+        }
         return result;
       }
     }
@@ -303,7 +309,7 @@ public class SampleThrift {
 
       public save_result getResult(I iface, save_args args) throws org.apache.thrift.TException {
         save_result result = new save_result();
-        iface.save(args.value);
+        iface.save(args.user);
         return result;
       }
     }
@@ -330,22 +336,22 @@ public class SampleThrift {
 
   }
 
-  public static class incr_args implements org.apache.thrift.TBase<incr_args, incr_args._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("incr_args");
+  public static class get_args implements org.apache.thrift.TBase<get_args, get_args._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_args");
 
-    private static final org.apache.thrift.protocol.TField VALUE_FIELD_DESC = new org.apache.thrift.protocol.TField("value", org.apache.thrift.protocol.TType.I32, (short)1);
+    private static final org.apache.thrift.protocol.TField ID_FIELD_DESC = new org.apache.thrift.protocol.TField("id", org.apache.thrift.protocol.TType.I32, (short)1);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      schemes.put(StandardScheme.class, new incr_argsStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new incr_argsTupleSchemeFactory());
+      schemes.put(StandardScheme.class, new get_argsStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new get_argsTupleSchemeFactory());
     }
 
-    public int value; // required
+    public int id; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      VALUE((short)1, "value");
+      ID((short)1, "id");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -360,8 +366,8 @@ public class SampleThrift {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // VALUE
-            return VALUE;
+          case 1: // ID
+            return ID;
           default:
             return null;
         }
@@ -402,76 +408,76 @@ public class SampleThrift {
     }
 
     // isset id assignments
-    private static final int __VALUE_ISSET_ID = 0;
+    private static final int __ID_ISSET_ID = 0;
     private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.VALUE, new org.apache.thrift.meta_data.FieldMetaData("value", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+      tmpMap.put(_Fields.ID, new org.apache.thrift.meta_data.FieldMetaData("id", org.apache.thrift.TFieldRequirementType.DEFAULT, 
           new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(incr_args.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(get_args.class, metaDataMap);
     }
 
-    public incr_args() {
+    public get_args() {
     }
 
-    public incr_args(
-      int value)
+    public get_args(
+      int id)
     {
       this();
-      this.value = value;
-      setValueIsSet(true);
+      this.id = id;
+      setIdIsSet(true);
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public incr_args(incr_args other) {
+    public get_args(get_args other) {
       __isset_bitfield = other.__isset_bitfield;
-      this.value = other.value;
+      this.id = other.id;
     }
 
-    public incr_args deepCopy() {
-      return new incr_args(this);
+    public get_args deepCopy() {
+      return new get_args(this);
     }
 
     @Override
     public void clear() {
-      setValueIsSet(false);
-      this.value = 0;
+      setIdIsSet(false);
+      this.id = 0;
     }
 
-    public int getValue() {
-      return this.value;
+    public int getId() {
+      return this.id;
     }
 
-    public incr_args setValue(int value) {
-      this.value = value;
-      setValueIsSet(true);
+    public get_args setId(int id) {
+      this.id = id;
+      setIdIsSet(true);
       return this;
     }
 
-    public void unsetValue() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __VALUE_ISSET_ID);
+    public void unsetId() {
+      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __ID_ISSET_ID);
     }
 
-    /** Returns true if field value is set (has been assigned a value) and false otherwise */
-    public boolean isSetValue() {
-      return EncodingUtils.testBit(__isset_bitfield, __VALUE_ISSET_ID);
+    /** Returns true if field id is set (has been assigned a value) and false otherwise */
+    public boolean isSetId() {
+      return EncodingUtils.testBit(__isset_bitfield, __ID_ISSET_ID);
     }
 
-    public void setValueIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __VALUE_ISSET_ID, value);
+    public void setIdIsSet(boolean value) {
+      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __ID_ISSET_ID, value);
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
-      case VALUE:
+      case ID:
         if (value == null) {
-          unsetValue();
+          unsetId();
         } else {
-          setValue((Integer)value);
+          setId((Integer)value);
         }
         break;
 
@@ -480,8 +486,8 @@ public class SampleThrift {
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
-      case VALUE:
-        return Integer.valueOf(getValue());
+      case ID:
+        return Integer.valueOf(getId());
 
       }
       throw new IllegalStateException();
@@ -494,8 +500,8 @@ public class SampleThrift {
       }
 
       switch (field) {
-      case VALUE:
-        return isSetValue();
+      case ID:
+        return isSetId();
       }
       throw new IllegalStateException();
     }
@@ -504,21 +510,21 @@ public class SampleThrift {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof incr_args)
-        return this.equals((incr_args)that);
+      if (that instanceof get_args)
+        return this.equals((get_args)that);
       return false;
     }
 
-    public boolean equals(incr_args that) {
+    public boolean equals(get_args that) {
       if (that == null)
         return false;
 
-      boolean this_present_value = true;
-      boolean that_present_value = true;
-      if (this_present_value || that_present_value) {
-        if (!(this_present_value && that_present_value))
+      boolean this_present_id = true;
+      boolean that_present_id = true;
+      if (this_present_id || that_present_id) {
+        if (!(this_present_id && that_present_id))
           return false;
-        if (this.value != that.value)
+        if (this.id != that.id)
           return false;
       }
 
@@ -530,20 +536,20 @@ public class SampleThrift {
       return 0;
     }
 
-    public int compareTo(incr_args other) {
+    public int compareTo(get_args other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
-      incr_args typedOther = (incr_args)other;
+      get_args typedOther = (get_args)other;
 
-      lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
+      lastComparison = Boolean.valueOf(isSetId()).compareTo(typedOther.isSetId());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetValue()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.value, typedOther.value);
+      if (isSetId()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.id, typedOther.id);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -565,11 +571,11 @@ public class SampleThrift {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("incr_args(");
+      StringBuilder sb = new StringBuilder("get_args(");
       boolean first = true;
 
-      sb.append("value:");
-      sb.append(this.value);
+      sb.append("id:");
+      sb.append(this.id);
       first = false;
       sb.append(")");
       return sb.toString();
@@ -598,15 +604,15 @@ public class SampleThrift {
       }
     }
 
-    private static class incr_argsStandardSchemeFactory implements SchemeFactory {
-      public incr_argsStandardScheme getScheme() {
-        return new incr_argsStandardScheme();
+    private static class get_argsStandardSchemeFactory implements SchemeFactory {
+      public get_argsStandardScheme getScheme() {
+        return new get_argsStandardScheme();
       }
     }
 
-    private static class incr_argsStandardScheme extends StandardScheme<incr_args> {
+    private static class get_argsStandardScheme extends StandardScheme<get_args> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, incr_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, get_args struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -616,10 +622,10 @@ public class SampleThrift {
             break;
           }
           switch (schemeField.id) {
-            case 1: // VALUE
+            case 1: // ID
               if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
-                struct.value = iprot.readI32();
-                struct.setValueIsSet(true);
+                struct.id = iprot.readI32();
+                struct.setIdIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -635,12 +641,12 @@ public class SampleThrift {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, incr_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, get_args struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(VALUE_FIELD_DESC);
-        oprot.writeI32(struct.value);
+        oprot.writeFieldBegin(ID_FIELD_DESC);
+        oprot.writeI32(struct.id);
         oprot.writeFieldEnd();
         oprot.writeFieldStop();
         oprot.writeStructEnd();
@@ -648,56 +654,59 @@ public class SampleThrift {
 
     }
 
-    private static class incr_argsTupleSchemeFactory implements SchemeFactory {
-      public incr_argsTupleScheme getScheme() {
-        return new incr_argsTupleScheme();
+    private static class get_argsTupleSchemeFactory implements SchemeFactory {
+      public get_argsTupleScheme getScheme() {
+        return new get_argsTupleScheme();
       }
     }
 
-    private static class incr_argsTupleScheme extends TupleScheme<incr_args> {
+    private static class get_argsTupleScheme extends TupleScheme<get_args> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, incr_args struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, get_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
-        if (struct.isSetValue()) {
+        if (struct.isSetId()) {
           optionals.set(0);
         }
         oprot.writeBitSet(optionals, 1);
-        if (struct.isSetValue()) {
-          oprot.writeI32(struct.value);
+        if (struct.isSetId()) {
+          oprot.writeI32(struct.id);
         }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, incr_args struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, get_args struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.value = iprot.readI32();
-          struct.setValueIsSet(true);
+          struct.id = iprot.readI32();
+          struct.setIdIsSet(true);
         }
       }
     }
 
   }
 
-  public static class incr_result implements org.apache.thrift.TBase<incr_result, incr_result._Fields>, java.io.Serializable, Cloneable   {
-    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("incr_result");
+  public static class get_result implements org.apache.thrift.TBase<get_result, get_result._Fields>, java.io.Serializable, Cloneable   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_result");
 
-    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.I32, (short)0);
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
+    private static final org.apache.thrift.protocol.TField E_FIELD_DESC = new org.apache.thrift.protocol.TField("e", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
-      schemes.put(StandardScheme.class, new incr_resultStandardSchemeFactory());
-      schemes.put(TupleScheme.class, new incr_resultTupleSchemeFactory());
+      schemes.put(StandardScheme.class, new get_resultStandardSchemeFactory());
+      schemes.put(TupleScheme.class, new get_resultTupleSchemeFactory());
     }
 
-    public int success; // required
+    public User success; // required
+    public UserNotFoundException e; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      SUCCESS((short)0, "success");
+      SUCCESS((short)0, "success"),
+      E((short)1, "e");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -714,6 +723,8 @@ public class SampleThrift {
         switch(fieldId) {
           case 0: // SUCCESS
             return SUCCESS;
+          case 1: // E
+            return E;
           default:
             return null;
         }
@@ -754,67 +765,97 @@ public class SampleThrift {
     }
 
     // isset id assignments
-    private static final int __SUCCESS_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
       tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, User.class)));
+      tmpMap.put(_Fields.E, new org.apache.thrift.meta_data.FieldMetaData("e", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRUCT)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
-      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(incr_result.class, metaDataMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(get_result.class, metaDataMap);
     }
 
-    public incr_result() {
+    public get_result() {
     }
 
-    public incr_result(
-      int success)
+    public get_result(
+      User success,
+      UserNotFoundException e)
     {
       this();
       this.success = success;
-      setSuccessIsSet(true);
+      this.e = e;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
-    public incr_result(incr_result other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.success = other.success;
+    public get_result(get_result other) {
+      if (other.isSetSuccess()) {
+        this.success = new User(other.success);
+      }
+      if (other.isSetE()) {
+        this.e = new UserNotFoundException(other.e);
+      }
     }
 
-    public incr_result deepCopy() {
-      return new incr_result(this);
+    public get_result deepCopy() {
+      return new get_result(this);
     }
 
     @Override
     public void clear() {
-      setSuccessIsSet(false);
-      this.success = 0;
+      this.success = null;
+      this.e = null;
     }
 
-    public int getSuccess() {
+    public User getSuccess() {
       return this.success;
     }
 
-    public incr_result setSuccess(int success) {
+    public get_result setSuccess(User success) {
       this.success = success;
-      setSuccessIsSet(true);
       return this;
     }
 
     public void unsetSuccess() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+      this.success = null;
     }
 
     /** Returns true if field success is set (has been assigned a value) and false otherwise */
     public boolean isSetSuccess() {
-      return EncodingUtils.testBit(__isset_bitfield, __SUCCESS_ISSET_ID);
+      return this.success != null;
     }
 
     public void setSuccessIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __SUCCESS_ISSET_ID, value);
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    public UserNotFoundException getE() {
+      return this.e;
+    }
+
+    public get_result setE(UserNotFoundException e) {
+      this.e = e;
+      return this;
+    }
+
+    public void unsetE() {
+      this.e = null;
+    }
+
+    /** Returns true if field e is set (has been assigned a value) and false otherwise */
+    public boolean isSetE() {
+      return this.e != null;
+    }
+
+    public void setEIsSet(boolean value) {
+      if (!value) {
+        this.e = null;
+      }
     }
 
     public void setFieldValue(_Fields field, Object value) {
@@ -823,7 +864,15 @@ public class SampleThrift {
         if (value == null) {
           unsetSuccess();
         } else {
-          setSuccess((Integer)value);
+          setSuccess((User)value);
+        }
+        break;
+
+      case E:
+        if (value == null) {
+          unsetE();
+        } else {
+          setE((UserNotFoundException)value);
         }
         break;
 
@@ -833,7 +882,10 @@ public class SampleThrift {
     public Object getFieldValue(_Fields field) {
       switch (field) {
       case SUCCESS:
-        return Integer.valueOf(getSuccess());
+        return getSuccess();
+
+      case E:
+        return getE();
 
       }
       throw new IllegalStateException();
@@ -848,6 +900,8 @@ public class SampleThrift {
       switch (field) {
       case SUCCESS:
         return isSetSuccess();
+      case E:
+        return isSetE();
       }
       throw new IllegalStateException();
     }
@@ -856,21 +910,30 @@ public class SampleThrift {
     public boolean equals(Object that) {
       if (that == null)
         return false;
-      if (that instanceof incr_result)
-        return this.equals((incr_result)that);
+      if (that instanceof get_result)
+        return this.equals((get_result)that);
       return false;
     }
 
-    public boolean equals(incr_result that) {
+    public boolean equals(get_result that) {
       if (that == null)
         return false;
 
-      boolean this_present_success = true;
-      boolean that_present_success = true;
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
       if (this_present_success || that_present_success) {
         if (!(this_present_success && that_present_success))
           return false;
-        if (this.success != that.success)
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      boolean this_present_e = true && this.isSetE();
+      boolean that_present_e = true && that.isSetE();
+      if (this_present_e || that_present_e) {
+        if (!(this_present_e && that_present_e))
+          return false;
+        if (!this.e.equals(that.e))
           return false;
       }
 
@@ -882,13 +945,13 @@ public class SampleThrift {
       return 0;
     }
 
-    public int compareTo(incr_result other) {
+    public int compareTo(get_result other) {
       if (!getClass().equals(other.getClass())) {
         return getClass().getName().compareTo(other.getClass().getName());
       }
 
       int lastComparison = 0;
-      incr_result typedOther = (incr_result)other;
+      get_result typedOther = (get_result)other;
 
       lastComparison = Boolean.valueOf(isSetSuccess()).compareTo(typedOther.isSetSuccess());
       if (lastComparison != 0) {
@@ -896,6 +959,16 @@ public class SampleThrift {
       }
       if (isSetSuccess()) {
         lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, typedOther.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = Boolean.valueOf(isSetE()).compareTo(typedOther.isSetE());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetE()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.e, typedOther.e);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -917,11 +990,23 @@ public class SampleThrift {
 
     @Override
     public String toString() {
-      StringBuilder sb = new StringBuilder("incr_result(");
+      StringBuilder sb = new StringBuilder("get_result(");
       boolean first = true;
 
       sb.append("success:");
-      sb.append(this.success);
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("e:");
+      if (this.e == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.e);
+      }
       first = false;
       sb.append(")");
       return sb.toString();
@@ -930,6 +1015,9 @@ public class SampleThrift {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
+      if (success != null) {
+        success.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -942,23 +1030,21 @@ public class SampleThrift {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
       }
     }
 
-    private static class incr_resultStandardSchemeFactory implements SchemeFactory {
-      public incr_resultStandardScheme getScheme() {
-        return new incr_resultStandardScheme();
+    private static class get_resultStandardSchemeFactory implements SchemeFactory {
+      public get_resultStandardScheme getScheme() {
+        return new get_resultStandardScheme();
       }
     }
 
-    private static class incr_resultStandardScheme extends StandardScheme<incr_result> {
+    private static class get_resultStandardScheme extends StandardScheme<get_result> {
 
-      public void read(org.apache.thrift.protocol.TProtocol iprot, incr_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol iprot, get_result struct) throws org.apache.thrift.TException {
         org.apache.thrift.protocol.TField schemeField;
         iprot.readStructBegin();
         while (true)
@@ -969,9 +1055,19 @@ public class SampleThrift {
           }
           switch (schemeField.id) {
             case 0: // SUCCESS
-              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
-                struct.success = iprot.readI32();
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.success = new User();
+                struct.success.read(iprot);
                 struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 1: // E
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.e = new UserNotFoundException();
+                struct.e.read(iprot);
+                struct.setEIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -987,13 +1083,18 @@ public class SampleThrift {
         struct.validate();
       }
 
-      public void write(org.apache.thrift.protocol.TProtocol oprot, incr_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol oprot, get_result struct) throws org.apache.thrift.TException {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        if (struct.isSetSuccess()) {
+        if (struct.success != null) {
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
-          oprot.writeI32(struct.success);
+          struct.success.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.e != null) {
+          oprot.writeFieldBegin(E_FIELD_DESC);
+          struct.e.write(oprot);
           oprot.writeFieldEnd();
         }
         oprot.writeFieldStop();
@@ -1002,34 +1103,46 @@ public class SampleThrift {
 
     }
 
-    private static class incr_resultTupleSchemeFactory implements SchemeFactory {
-      public incr_resultTupleScheme getScheme() {
-        return new incr_resultTupleScheme();
+    private static class get_resultTupleSchemeFactory implements SchemeFactory {
+      public get_resultTupleScheme getScheme() {
+        return new get_resultTupleScheme();
       }
     }
 
-    private static class incr_resultTupleScheme extends TupleScheme<incr_result> {
+    private static class get_resultTupleScheme extends TupleScheme<get_result> {
 
       @Override
-      public void write(org.apache.thrift.protocol.TProtocol prot, incr_result struct) throws org.apache.thrift.TException {
+      public void write(org.apache.thrift.protocol.TProtocol prot, get_result struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
         if (struct.isSetSuccess()) {
           optionals.set(0);
         }
-        oprot.writeBitSet(optionals, 1);
+        if (struct.isSetE()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
         if (struct.isSetSuccess()) {
-          oprot.writeI32(struct.success);
+          struct.success.write(oprot);
+        }
+        if (struct.isSetE()) {
+          struct.e.write(oprot);
         }
       }
 
       @Override
-      public void read(org.apache.thrift.protocol.TProtocol prot, incr_result struct) throws org.apache.thrift.TException {
+      public void read(org.apache.thrift.protocol.TProtocol prot, get_result struct) throws org.apache.thrift.TException {
         TTupleProtocol iprot = (TTupleProtocol) prot;
-        BitSet incoming = iprot.readBitSet(1);
+        BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
-          struct.success = iprot.readI32();
+          struct.success = new User();
+          struct.success.read(iprot);
           struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.e = new UserNotFoundException();
+          struct.e.read(iprot);
+          struct.setEIsSet(true);
         }
       }
     }
@@ -1039,7 +1152,7 @@ public class SampleThrift {
   public static class save_args implements org.apache.thrift.TBase<save_args, save_args._Fields>, java.io.Serializable, Cloneable   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("save_args");
 
-    private static final org.apache.thrift.protocol.TField VALUE_FIELD_DESC = new org.apache.thrift.protocol.TField("value", org.apache.thrift.protocol.TType.I32, (short)1);
+    private static final org.apache.thrift.protocol.TField USER_FIELD_DESC = new org.apache.thrift.protocol.TField("user", org.apache.thrift.protocol.TType.STRUCT, (short)1);
 
     private static final Map<Class<? extends IScheme>, SchemeFactory> schemes = new HashMap<Class<? extends IScheme>, SchemeFactory>();
     static {
@@ -1047,11 +1160,11 @@ public class SampleThrift {
       schemes.put(TupleScheme.class, new save_argsTupleSchemeFactory());
     }
 
-    public int value; // required
+    public User user; // required
 
     /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
     public enum _Fields implements org.apache.thrift.TFieldIdEnum {
-      VALUE((short)1, "value");
+      USER((short)1, "user");
 
       private static final Map<String, _Fields> byName = new HashMap<String, _Fields>();
 
@@ -1066,8 +1179,8 @@ public class SampleThrift {
        */
       public static _Fields findByThriftId(int fieldId) {
         switch(fieldId) {
-          case 1: // VALUE
-            return VALUE;
+          case 1: // USER
+            return USER;
           default:
             return null;
         }
@@ -1108,13 +1221,11 @@ public class SampleThrift {
     }
 
     // isset id assignments
-    private static final int __VALUE_ISSET_ID = 0;
-    private byte __isset_bitfield = 0;
     public static final Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
     static {
       Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
-      tmpMap.put(_Fields.VALUE, new org.apache.thrift.meta_data.FieldMetaData("value", org.apache.thrift.TFieldRequirementType.DEFAULT, 
-          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.I32)));
+      tmpMap.put(_Fields.USER, new org.apache.thrift.meta_data.FieldMetaData("user", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, User.class)));
       metaDataMap = Collections.unmodifiableMap(tmpMap);
       org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(save_args.class, metaDataMap);
     }
@@ -1123,19 +1234,19 @@ public class SampleThrift {
     }
 
     public save_args(
-      int value)
+      User user)
     {
       this();
-      this.value = value;
-      setValueIsSet(true);
+      this.user = user;
     }
 
     /**
      * Performs a deep copy on <i>other</i>.
      */
     public save_args(save_args other) {
-      __isset_bitfield = other.__isset_bitfield;
-      this.value = other.value;
+      if (other.isSetUser()) {
+        this.user = new User(other.user);
+      }
     }
 
     public save_args deepCopy() {
@@ -1144,40 +1255,40 @@ public class SampleThrift {
 
     @Override
     public void clear() {
-      setValueIsSet(false);
-      this.value = 0;
+      this.user = null;
     }
 
-    public int getValue() {
-      return this.value;
+    public User getUser() {
+      return this.user;
     }
 
-    public save_args setValue(int value) {
-      this.value = value;
-      setValueIsSet(true);
+    public save_args setUser(User user) {
+      this.user = user;
       return this;
     }
 
-    public void unsetValue() {
-      __isset_bitfield = EncodingUtils.clearBit(__isset_bitfield, __VALUE_ISSET_ID);
+    public void unsetUser() {
+      this.user = null;
     }
 
-    /** Returns true if field value is set (has been assigned a value) and false otherwise */
-    public boolean isSetValue() {
-      return EncodingUtils.testBit(__isset_bitfield, __VALUE_ISSET_ID);
+    /** Returns true if field user is set (has been assigned a value) and false otherwise */
+    public boolean isSetUser() {
+      return this.user != null;
     }
 
-    public void setValueIsSet(boolean value) {
-      __isset_bitfield = EncodingUtils.setBit(__isset_bitfield, __VALUE_ISSET_ID, value);
+    public void setUserIsSet(boolean value) {
+      if (!value) {
+        this.user = null;
+      }
     }
 
     public void setFieldValue(_Fields field, Object value) {
       switch (field) {
-      case VALUE:
+      case USER:
         if (value == null) {
-          unsetValue();
+          unsetUser();
         } else {
-          setValue((Integer)value);
+          setUser((User)value);
         }
         break;
 
@@ -1186,8 +1297,8 @@ public class SampleThrift {
 
     public Object getFieldValue(_Fields field) {
       switch (field) {
-      case VALUE:
-        return Integer.valueOf(getValue());
+      case USER:
+        return getUser();
 
       }
       throw new IllegalStateException();
@@ -1200,8 +1311,8 @@ public class SampleThrift {
       }
 
       switch (field) {
-      case VALUE:
-        return isSetValue();
+      case USER:
+        return isSetUser();
       }
       throw new IllegalStateException();
     }
@@ -1219,12 +1330,12 @@ public class SampleThrift {
       if (that == null)
         return false;
 
-      boolean this_present_value = true;
-      boolean that_present_value = true;
-      if (this_present_value || that_present_value) {
-        if (!(this_present_value && that_present_value))
+      boolean this_present_user = true && this.isSetUser();
+      boolean that_present_user = true && that.isSetUser();
+      if (this_present_user || that_present_user) {
+        if (!(this_present_user && that_present_user))
           return false;
-        if (this.value != that.value)
+        if (!this.user.equals(that.user))
           return false;
       }
 
@@ -1244,12 +1355,12 @@ public class SampleThrift {
       int lastComparison = 0;
       save_args typedOther = (save_args)other;
 
-      lastComparison = Boolean.valueOf(isSetValue()).compareTo(typedOther.isSetValue());
+      lastComparison = Boolean.valueOf(isSetUser()).compareTo(typedOther.isSetUser());
       if (lastComparison != 0) {
         return lastComparison;
       }
-      if (isSetValue()) {
-        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.value, typedOther.value);
+      if (isSetUser()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.user, typedOther.user);
         if (lastComparison != 0) {
           return lastComparison;
         }
@@ -1274,8 +1385,12 @@ public class SampleThrift {
       StringBuilder sb = new StringBuilder("save_args(");
       boolean first = true;
 
-      sb.append("value:");
-      sb.append(this.value);
+      sb.append("user:");
+      if (this.user == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.user);
+      }
       first = false;
       sb.append(")");
       return sb.toString();
@@ -1284,6 +1399,9 @@ public class SampleThrift {
     public void validate() throws org.apache.thrift.TException {
       // check for required fields
       // check for sub-struct validity
+      if (user != null) {
+        user.validate();
+      }
     }
 
     private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
@@ -1296,8 +1414,6 @@ public class SampleThrift {
 
     private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, ClassNotFoundException {
       try {
-        // it doesn't seem like you should have to do this, but java serialization is wacky, and doesn't call the default constructor.
-        __isset_bitfield = 0;
         read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
       } catch (org.apache.thrift.TException te) {
         throw new java.io.IOException(te);
@@ -1322,10 +1438,11 @@ public class SampleThrift {
             break;
           }
           switch (schemeField.id) {
-            case 1: // VALUE
-              if (schemeField.type == org.apache.thrift.protocol.TType.I32) {
-                struct.value = iprot.readI32();
-                struct.setValueIsSet(true);
+            case 1: // USER
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.user = new User();
+                struct.user.read(iprot);
+                struct.setUserIsSet(true);
               } else { 
                 org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
               }
@@ -1345,9 +1462,11 @@ public class SampleThrift {
         struct.validate();
 
         oprot.writeStructBegin(STRUCT_DESC);
-        oprot.writeFieldBegin(VALUE_FIELD_DESC);
-        oprot.writeI32(struct.value);
-        oprot.writeFieldEnd();
+        if (struct.user != null) {
+          oprot.writeFieldBegin(USER_FIELD_DESC);
+          struct.user.write(oprot);
+          oprot.writeFieldEnd();
+        }
         oprot.writeFieldStop();
         oprot.writeStructEnd();
       }
@@ -1366,12 +1485,12 @@ public class SampleThrift {
       public void write(org.apache.thrift.protocol.TProtocol prot, save_args struct) throws org.apache.thrift.TException {
         TTupleProtocol oprot = (TTupleProtocol) prot;
         BitSet optionals = new BitSet();
-        if (struct.isSetValue()) {
+        if (struct.isSetUser()) {
           optionals.set(0);
         }
         oprot.writeBitSet(optionals, 1);
-        if (struct.isSetValue()) {
-          oprot.writeI32(struct.value);
+        if (struct.isSetUser()) {
+          struct.user.write(oprot);
         }
       }
 
@@ -1380,8 +1499,9 @@ public class SampleThrift {
         TTupleProtocol iprot = (TTupleProtocol) prot;
         BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
-          struct.value = iprot.readI32();
-          struct.setValueIsSet(true);
+          struct.user = new User();
+          struct.user.read(iprot);
+          struct.setUserIsSet(true);
         }
       }
     }
